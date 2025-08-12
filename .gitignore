@@ -78,7 +78,6 @@ temp/
 *.bak
 
 # Package managers
-package-lock.json
 yarn.lock
 .npm/
 .yarn/
