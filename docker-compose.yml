@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  seo-analyzer:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_PATH=/app/data/seo_analysis.db
+      - RENDER_TIMEOUT_MS=10000
+      - MAX_ANALYSIS_SECONDS=60
+      - MAX_HTML_MB=10
+      - TARGET_SECONDS=30
+      - COVERAGE_PCT=80
+      - RATE_LIMIT_ANONYMOUS=5
+      - RATE_LIMIT_AUTHENTICATED=20
+      - NEXT_PUBLIC_APP_NAME=OneStep SEO Inspector
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro  # For SSL certificates
+    depends_on:
+      - seo-analyzer
+    restart: unless-stopped
+    profiles:
+      - production
