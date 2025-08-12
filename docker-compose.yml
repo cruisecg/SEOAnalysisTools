@@ -1,6 +1,7 @@
 services:
   seo-analyzer:
     build: .
+    image: onestepseoinspector
     ports:
       - "3000:3000"
     environment:
