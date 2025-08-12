@@ -36,7 +36,14 @@ export class SEOAnalyzer {
     
     try {
       // Set user agent
-      await page.setUserAgent('OneStep SEO Inspector Bot 1.0 (+https://seo-inspector.com/bot)');
+      await page.route('**/*', (route) => {
+        route.continue({
+          headers: {
+            ...route.request().headers(),
+            'User-Agent': 'OneStep SEO Inspector Bot 1.0 (+https://seo-inspector.com/bot)'
+          }
+        });
+      });
       
       // Track redirects
       page.on('response', (response) => {
