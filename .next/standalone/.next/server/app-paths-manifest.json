@@ -1,0 +1,9 @@
+{
+  "/_not-found": "app/_not-found.js",
+  "/api/health/route": "app/api/health/route.js",
+  "/api/analyze/route": "app/api/analyze/route.js",
+  "/result/[taskId]/page": "app/result/[taskId]/page.js",
+  "/api/result/[taskId]/route": "app/api/result/[taskId]/route.js",
+  "/page": "app/page.js",
+  "/api/report/[taskId]/route": "app/api/report/[taskId]/route.js"
+}

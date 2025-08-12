@@ -1,0 +1,110 @@
+{
+  "tasks": [
+    {
+      "id": "70834bb8-4ae8-403f-86f9-9a7692a18ce7",
+      "status": "failed",
+      "requested_url": "https://example.com",
+      "ip_address": "::ffff:192.168.65.1",
+      "user_agent": "curl/8.5.0",
+      "created_at": "2025-08-12T04:47:22.400Z",
+      "completed_at": "2025-08-12T04:47:22.422Z",
+      "error_message": "browserType.launch: Executable doesn't exist at /nonexistent/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+    },
+    {
+      "id": "b227d44a-99b3-45d5-9da9-b7e06e7a6259",
+      "status": "failed",
+      "requested_url": "https://example.com",
+      "ip_address": "::ffff:192.168.65.1",
+      "user_agent": "curl/8.5.0",
+      "created_at": "2025-08-12T04:53:50.052Z",
+      "completed_at": "2025-08-12T04:53:50.071Z",
+      "error_message": "browserType.launch: Executable doesn't exist at /nonexistent/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+    },
+    {
+      "id": "cb3f12af-c600-47a5-97c7-15ab47512c4e",
+      "status": "done",
+      "requested_url": "https://example.com",
+      "ip_address": "::ffff:192.168.65.1",
+      "user_agent": "curl/8.5.0",
+      "created_at": "2025-08-12T04:57:16.817Z",
+      "completed_at": "2025-08-12T04:57:19.524Z",
+      "final_url": "https://example.com/",
+      "overall_score": 54,
+      "grade": "E",
+      "analysis_data": "{\"checks\":[{\"group\":\"Technical Foundation\",\"weight\":30,\"score\":15,\"items\":[{\"id\":\"http_status\",\"label\":\"HTTP 狀態碼\",\"weight\":5,\"score\":5,\"evidence\":{\"status_code\":200},\"advice\":\"狀態碼正常\",\"priority\":\"low\"},{\"id\":\"https_usage\",\"label\":\"HTTPS 使用\",\"weight\":5,\"score\":5,\"evidence\":{\"is_https\":true,\"url\":\"https://example.com/\"},\"advice\":\"已使用 HTTPS\",\"priority\":\"low\"},{\"id\":\"robots_txt\",\"label\":\"Robots.txt\",\"weight\":3,\"score\":0,\"evidence\":{\"exists\":false},\"advice\":\"建議添加 robots.txt 文件\",\"priority\":\"medium\"},{\"id\":\"sitemap_xml\",\"label\":\"Sitemap.xml\",\"weight\":3,\"score\":0,\"evidence\":{\"exists\":false},\"advice\":\"建議添加 sitemap.xml 文件\",\"priority\":\"medium\"},{\"id\":\"canonical_url\",\"label\":\"Canonical URL\",\"weight\":4,\"score\":0,\"evidence\":{},\"advice\":\"建議設定 canonical URL\",\"priority\":\"medium\"},{\"id\":\"indexability\",\"label\":\"可索引性\",\"weight\":5,\"score\":5,\"evidence\":{\"meta_robots\":\"\",\"has_noindex\":false},\"advice\":\"頁面可被搜索引擎索引\",\"priority\":\"low\"}]},{\"group\":\"Content & Structure\",\"weight\":25,\"score\":15,\"items\":[{\"id\":\"title_tag\",\"label\":\"Title 標籤\",\"weight\":5,\"score\":3,\"evidence\":{\"title\":\"Example Domain\",\"length\":14},\"advice\":\"Title 太短，建議 30-60 字元\",\"priority\":\"high\"},{\"id\":\"meta_description\",\"label\":\"Meta Description\",\"weight\":5,\"score\":0,\"evidence\":{\"description\":\"\",\"length\":0},\"advice\":\"缺少 meta description\",\"priority\":\"high\"},{\"id\":\"h1_tag\",\"label\":\"H1 標籤\",\"weight\":5,\"score\":5,\"evidence\":{\"h1_count\":1,\"h1_text\":\"Example Domain\"},\"advice\":\"H1 標籤設定正確\",\"priority\":\"low\"},{\"id\":\"heading_hierarchy\",\"label\":\"標題階層\",\"weight\":5,\"score\":2,\"evidence\":{\"h1_count\":1,\"h2_count\":0,\"h3_count\":0},\"advice\":\"建議使用 H2 標籤組織內容\",\"priority\":\"medium\"},{\"id\":\"image_alt_attributes\",\"label\":\"圖片 Alt 屬性\",\"weight\":5,\"score\":5,\"evidence\":{\"total_images\":0,\"images_with_alt\":0,\"coverage_percent\":100},\"advice\":\"所有圖片都有 alt 屬性\",\"priority\":\"low\"}]},{\"group\":\"Structured Data\",\"weight\":10,\"score\":0,\"items\":[{\"id\":\"structured_data_presence\",\"label\":\"結構化資料存在\",\"weight\":5,\"score\":0,\"evidence\":{\"total_scripts\":0,\"valid_json_ld\":0,\"types\":[]},\"advice\":\"建議添加 JSON-LD 結構化資料\",\"priority\":\"medium\"},{\"id\":\"schema_compliance\",\"label\":\"Schema.org 合規性\",\"weight\":5,\"score\":0,\"evidence\":{\"has_relevant_schema\":false,\"detected_types\":[]},\"advice\":\"建議添加適當的 Schema.org 標記\",\"priority\":\"medium\"}]},{\"group\":\"Performance & CWV\",\"weight\":25,\"score\":30,\"items\":[{\"id\":\"compression\",\"label\":\"內容壓縮\",\"weight\":5,\"score\":5,\"evidence\":{\"content_encoding\":\"gzip\"},\"advice\":\"已啟用內容壓縮\",\"priority\":\"low\"},{\"id\":\"caching_headers\",\"label\":\"快取設定\",\"weight\":5,\"score\":5,\"evidence\":{\"cache_control\":\"max-age=1700\"},\"advice\":\"已設定適當的快取策略\",\"priority\":\"low\"},{\"id\":\"image_optimization\",\"label\":\"圖片最佳化\",\"weight\":5,\"score\":5,\"evidence\":{\"total_images\":0,\"modern_format_images\":0,\"modern_format_percentage\":0},\"advice\":\"所有圖片都使用現代格式\",\"priority\":\"low\"},{\"id\":\"lazy_loading\",\"label\":\"延遲載入\",\"weight\":5,\"score\":5,\"evidence\":{\"images_with_lazy\":0,\"total_images\":0},\"advice\":\"建議為非關鍵圖片添加 loading=\\\"lazy\\\" 屬性\",\"priority\":\"low\"},{\"id\":\"core_web_vitals\",\"label\":\"核心網頁生命力\",\"weight\":15,\"score\":10,\"evidence\":{\"note\":\"需要 Lighthouse 實際測量\"},\"advice\":\"建議使用 PageSpeed Insights 檢測實際的 CWV 指標\",\"priority\":\"high\"}]},{\"group\":\"Social Markup\",\"weight\":10,\"score\":0,\"items\":[{\"id\":\"open_graph_tags\",\"label\":\"Open Graph 標籤\",\"weight\":6,\"score\":0,\"evidence\":{\"complete_tags\":0},\"advice\":\"缺少 5 個主要 Open Graph 標籤 (title, description, image, url, type)\",\"priority\":\"medium\"},{\"id\":\"twitter_cards\",\"label\":\"Twitter Cards\",\"weight\":4,\"score\":0,\"evidence\":{\"complete_tags\":0},\"advice\":\"建議補齊 Twitter Cards 標籤 (目前: 0/4)\",\"priority\":\"medium\"}]}],\"cwv\":{\"source\":\"lab\"},\"warnings\":[\"Content & Structure: Title 太短，建議 30-60 字元\",\"Content & Structure: 缺少 meta description\",\"Performance & CWV: 建議使用 PageSpeed Insights 檢測實際的 CWV 指標\"]}"
+    },
+    {
+      "id": "e6be4ea6-09ef-44b7-9e57-4da81fbcdac3",
+      "status": "done",
+      "requested_url": "https://www.onestep.place",
+      "ip_address": "::ffff:192.168.65.1",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "created_at": "2025-08-12T05:02:42.789Z",
+      "completed_at": "2025-08-12T05:02:49.840Z",
+      "final_url": "https://www.onestep.place/",
+      "overall_score": 76,
+      "grade": "C",
+      "analysis_data": "{\"checks\":[{\"group\":\"Technical Foundation\",\"weight\":30,\"score\":21,\"items\":[{\"id\":\"http_status\",\"label\":\"HTTP 狀態碼\",\"weight\":5,\"score\":5,\"evidence\":{\"status_code\":200},\"advice\":\"狀態碼正常\",\"priority\":\"low\"},{\"id\":\"https_usage\",\"label\":\"HTTPS 使用\",\"weight\":5,\"score\":5,\"evidence\":{\"is_https\":true,\"url\":\"https://www.onestep.place/\"},\"advice\":\"已使用 HTTPS\",\"priority\":\"low\"},{\"id\":\"robots_txt\",\"label\":\"Robots.txt\",\"weight\":3,\"score\":3,\"evidence\":{\"exists\":true,\"content\":\"# START nuxt-robots (indexable)\\nUser-agent: *\\nAllow: /\\nDisallow: /account\\nDisallow: /order\\n\\nSitemap: https://onestep.place/sitemap.xml\\n# END nuxt-robots\"},\"advice\":\"Robots.txt 存在\",\"priority\":\"medium\"},{\"id\":\"sitemap_xml\",\"label\":\"Sitemap.xml\",\"weight\":3,\"score\":3,\"evidence\":{\"exists\":true},\"advice\":\"Sitemap.xml 存在\",\"priority\":\"medium\"},{\"id\":\"canonical_url\",\"label\":\"Canonical URL\",\"weight\":4,\"score\":0,\"evidence\":{},\"advice\":\"建議設定 canonical URL\",\"priority\":\"medium\"},{\"id\":\"indexability\",\"label\":\"可索引性\",\"weight\":5,\"score\":5,\"evidence\":{\"meta_robots\":\"index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1\",\"has_noindex\":false},\"advice\":\"頁面可被搜索引擎索引\",\"priority\":\"low\"}]},{\"group\":\"Content & Structure\",\"weight\":25,\"score\":21,\"items\":[{\"id\":\"title_tag\",\"label\":\"Title 標籤\",\"weight\":5,\"score\":3,\"evidence\":{\"title\":\"場地租借到空間便利店，快速找到理想空間！\",\"length\":20},\"advice\":\"Title 太短，建議 30-60 字元\",\"priority\":\"high\"},{\"id\":\"meta_description\",\"label\":\"Meta Description\",\"weight\":5,\"score\":3,\"evidence\":{\"description\":\"場地租借平台推薦選空間便利店！我們提供多樣化的場地租借空間、多種時段方案，加上預約流程簡單快速，可讓您輕鬆找到理想場地！想了解更多推薦場地和租借秘訣？快往下閱讀我們的場地租借筆記吧！\",\"length\":91},\"advice\":\"Description 太短，建議 120-160 字元\",\"priority\":\"high\"},{\"id\":\"h1_tag\",\"label\":\"H1 標籤\",\"weight\":5,\"score\":5,\"evidence\":{\"h1_count\":1,\"h1_text\":\"場地租借到空間便利店，快速找到理想空間！\"},\"advice\":\"H1 標籤設定正確\",\"priority\":\"low\"},{\"id\":\"heading_hierarchy\",\"label\":\"標題階層\",\"weight\":5,\"score\":5,\"evidence\":{\"h1_count\":1,\"h2_count\":11,\"h3_count\":13},\"advice\":\"標題階層結構良好\",\"priority\":\"low\"},{\"id\":\"image_alt_attributes\",\"label\":\"圖片 Alt 屬性\",\"weight\":5,\"score\":5,\"evidence\":{\"total_images\":41,\"images_with_alt\":41,\"coverage_percent\":100},\"advice\":\"所有圖片都有 alt 屬性\",\"priority\":\"low\"}]},{\"group\":\"Structured Data\",\"weight\":10,\"score\":10,\"items\":[{\"id\":\"structured_data_presence\",\"label\":\"結構化資料存在\",\"weight\":5,\"score\":5,\"evidence\":{\"total_scripts\":2,\"valid_json_ld\":2,\"types\":[\"WebSite\",\"LocalBusiness\"]},\"advice\":\"發現 2 個有效的結構化資料\",\"priority\":\"low\"},{\"id\":\"schema_compliance\",\"label\":\"Schema.org 合規性\",\"weight\":5,\"score\":5,\"evidence\":{\"has_relevant_schema\":true,\"detected_types\":[\"WebSite\",\"LocalBusiness\"]},\"advice\":\"檢測到相關的 Schema.org 類型\",\"priority\":\"low\"}]},{\"group\":\"Performance & CWV\",\"weight\":25,\"score\":20,\"items\":[{\"id\":\"compression\",\"label\":\"內容壓縮\",\"weight\":5,\"score\":5,\"evidence\":{\"content_encoding\":\"gzip\"},\"advice\":\"已啟用內容壓縮\",\"priority\":\"low\"},{\"id\":\"caching_headers\",\"label\":\"快取設定\",\"weight\":5,\"score\":0,\"evidence\":{},\"advice\":\"建議設定適當的 Cache-Control 標頭\",\"priority\":\"medium\"},{\"id\":\"image_optimization\",\"label\":\"圖片最佳化\",\"weight\":5,\"score\":0,\"evidence\":{\"total_images\":41,\"modern_format_images\":3,\"modern_format_percentage\":7},\"advice\":\"建議將更多圖片轉換為 WebP 或 AVIF 格式 (目前: 7%)\",\"priority\":\"medium\"},{\"id\":\"lazy_loading\",\"label\":\"延遲載入\",\"weight\":5,\"score\":5,\"evidence\":{\"images_with_lazy\":25,\"total_images\":41},\"advice\":\"25 張圖片使用延遲載入\",\"priority\":\"low\"},{\"id\":\"core_web_vitals\",\"label\":\"核心網頁生命力\",\"weight\":15,\"score\":10,\"evidence\":{\"note\":\"需要 Lighthouse 實際測量\"},\"advice\":\"建議使用 PageSpeed Insights 檢測實際的 CWV 指標\",\"priority\":\"high\"}]},{\"group\":\"Social Markup\",\"weight\":10,\"score\":6,\"items\":[{\"id\":\"open_graph_tags\",\"label\":\"Open Graph 標籤\",\"weight\":6,\"score\":6,\"evidence\":{\"og_title\":\"空間便利店｜方便順利的場地租借平台。時租日租場地，活動聚會場地，商務會議線上預約\",\"og_description\":\"空間便利店是一個線上的場地租借平台！我們提供線上預約，省去聯絡，方便又順利。活動空間、會議室，攝影棚、餐廳包廂、聚會場地都可預約\",\"og_image\":\"https://pic.onestep.place/images/onestep-og.png\",\"og_url\":\"https://www.onestep.place\",\"og_type\":\"website\",\"complete_tags\":5},\"advice\":\"所有主要 Open Graph 標籤都已設定\",\"priority\":\"low\"},{\"id\":\"twitter_cards\",\"label\":\"Twitter Cards\",\"weight\":4,\"score\":0,\"evidence\":{\"complete_tags\":0},\"advice\":\"建議補齊 Twitter Cards 標籤 (目前: 0/4)\",\"priority\":\"medium\"}]}],\"cwv\":{\"source\":\"lab\"},\"warnings\":[\"Content & Structure: Title 太短，建議 30-60 字元\",\"Content & Structure: Description 太短，建議 120-160 字元\",\"Performance & CWV: 建議使用 PageSpeed Insights 檢測實際的 CWV 指標\"]}"
+    }
+  ],
+  "rate_limits": [
+    {
+      "ip_address": "::ffff:192.168.65.1",
+      "hour_key": "2025-08-12T04",
+      "request_count": 3,
+      "created_at": "2025-08-12T04:47:22.394Z"
+    },
+    {
+      "ip_address": "::ffff:192.168.65.1",
+      "hour_key": "2025-08-12T05",
+      "request_count": 1,
+      "created_at": "2025-08-12T05:02:42.788Z"
+    }
+  ],
+  "analysis_cache": [
+    {
+      "url_hash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+      "url": "https://example.com",
+      "task_id": "cb3f12af-c600-47a5-97c7-15ab47512c4e",
+      "cached_at": "2025-08-12T04:57:19.524Z"
+    },
+    {
+      "url_hash": "d681c09214ededaf20da71025a37364fc44788d8cc412b299b6faaa882d4b764",
+      "url": "https://www.onestep.place",
+      "task_id": "e6be4ea6-09ef-44b7-9e57-4da81fbcdac3",
+      "cached_at": "2025-08-12T05:02:49.840Z"
+    }
+  ],
+  "settings": [
+    {
+      "key": "weights.technical",
+      "value": "30",
+      "description": "Technical foundation weight",
+      "updated_at": "2025-08-12T04:47:04.229Z"
+    },
+    {
+      "key": "weights.content",
+      "value": "25",
+      "description": "Content and structure weight",
+      "updated_at": "2025-08-12T04:47:04.229Z"
+    },
+    {
+      "key": "weights.structured_data",
+      "value": "10",
+      "description": "Structured data weight",
+      "updated_at": "2025-08-12T04:47:04.229Z"
+    },
+    {
+      "key": "weights.performance",
+      "value": "25",
+      "description": "Performance and CWV weight",
+      "updated_at": "2025-08-12T04:47:04.229Z"
+    },
+    {
+      "key": "weights.social",
+      "value": "10",
+      "description": "Social markup weight",
+      "updated_at": "2025-08-12T04:47:04.229Z"
+    }
+  ]
+}
