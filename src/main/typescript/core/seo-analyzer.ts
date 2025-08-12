@@ -104,11 +104,11 @@ export class SEOAnalyzer {
     const $ = cheerio.load(context.html);
     
     return [
-      await this.checkTechnicalFoundation(context, $),
-      await this.checkContentStructure(context, $),
-      await this.checkStructuredData(context, $),
-      await this.checkPerformance(context, $),
-      await this.checkSocialMarkup(context, $)
+      await this.checkTechnicalFoundation(context, $ as any),
+      await this.checkContentStructure(context, $ as any),
+      await this.checkStructuredData(context, $ as any),
+      await this.checkPerformance(context, $ as any),
+      await this.checkSocialMarkup(context, $ as any)
     ];
   }
 
