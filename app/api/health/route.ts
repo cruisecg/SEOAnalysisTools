@@ -3,12 +3,13 @@ import { db } from '../../../src/main/typescript/models/database';
 
 export async function GET() {
   try {
-    // Check database connection
-    const result = db.prepare('SELECT 1 as ok').get();
+    // Check database connection (read access test)
+    const tasksCount = db.data.tasks.length;
     
     // Get basic stats
     const stats = {
-      database: !!result,
+      database: true,
+      tasksCount,
       timestamp: new Date().toISOString(),
       version: '1.0.0',
       status: 'healthy'
