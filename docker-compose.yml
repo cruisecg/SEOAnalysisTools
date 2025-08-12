@@ -1,5 +1,5 @@
 services:
-  seo-analyzer:
+  seoinspector:
     build: .
     image: onestepseoinspector
     ports:
@@ -36,7 +36,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro  # For SSL certificates
     depends_on:
-      - seo-analyzer
+      - seoinspector
     restart: unless-stopped
     profiles:
       - production
