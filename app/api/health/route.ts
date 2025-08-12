@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { db } from '../../../src/main/typescript/models/database';
+import { initDB } from '../../../src/main/typescript/models/database';
 
 export async function GET() {
   try {
     // Check database connection (read access test)
+    const db = await initDB();
     const tasksCount = db.data.tasks.length;
     
     // Get basic stats

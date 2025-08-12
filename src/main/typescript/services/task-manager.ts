@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { createHash } from 'crypto';
-import { db, dbOperations } from '../models/database';
+import { dbOperations } from '../models/database';
 import { SEOAnalyzer } from '../core/seo-analyzer';
 import { AnalysisConfig, SEOAnalysisTask, SEOCheckGroup } from '../core/types';
 
@@ -25,7 +25,7 @@ export class TaskManager {
 
     // Check cache
     const urlHash = this.hashUrl(url);
-    const cachedTask = dbOperations.getCachedAnalysis(urlHash);
+    const cachedTask = await dbOperations.getCachedAnalysis(urlHash);
     
     if (cachedTask) {
       return cachedTask.task_id;
@@ -33,12 +33,12 @@ export class TaskManager {
 
     // Create new task
     const taskId = randomUUID();
-    dbOperations.insertTask(taskId, 'queued', url, ipAddress, userAgent);
+    await dbOperations.insertTask(taskId, 'queued', url, ipAddress, userAgent);
     
     // Start analysis in background (non-blocking)
-    this.processTask(taskId, url, urlHash).catch(error => {
+    this.processTask(taskId, url, urlHash).catch(async error => {
       console.error(`Task ${taskId} failed:`, error);
-      dbOperations.updateTaskStatus(
+      await dbOperations.updateTaskStatus(
         'failed',
         null,
         null,
@@ -53,7 +53,7 @@ export class TaskManager {
   }
 
   async getTask(taskId: string): Promise<SEOAnalysisTask | null> {
-    const task = dbOperations.getTask(taskId);
+    const task = await dbOperations.getTask(taskId);
     if (!task) return null;
 
     const analysisData = task.analysis_data ? JSON.parse(task.analysis_data) : null;
@@ -83,7 +83,7 @@ export class TaskManager {
 
     try {
       // Update status to running
-      dbOperations.updateTaskStatus('running', null, null, null, null, null, taskId);
+      await dbOperations.updateTaskStatus('running', null, null, null, null, null, taskId);
 
       // Perform analysis with timeout
       const timeoutPromise = new Promise((_, reject) => {
@@ -106,7 +106,7 @@ export class TaskManager {
       };
 
       // Update task with results
-      dbOperations.updateTaskStatus(
+      await dbOperations.updateTaskStatus(
         'done',
         context.finalUrl,
         overallScore,
@@ -117,7 +117,7 @@ export class TaskManager {
       );
 
       // Cache the result
-      dbOperations.insertCache(urlHash, url, taskId);
+      await dbOperations.insertCache(urlHash, url, taskId);
 
     } finally {
       this.runningTasks.delete(taskId);
@@ -166,7 +166,8 @@ export class TaskManager {
 
   private async checkRateLimit(ipAddress: string): Promise<void> {
     const hourKey = new Date().toISOString().slice(0, 13); // YYYY-MM-DDTHH
-    const currentCount = dbOperations.getRateLimit(ipAddress, hourKey)?.request_count || 0;
+    const rateLimit = await dbOperations.getRateLimit(ipAddress, hourKey);
+    const currentCount = rateLimit?.request_count || 0;
     
     const limit = this.config.weights ? 20 : 5; // Assuming authenticated users get higher limit
     
@@ -174,7 +175,7 @@ export class TaskManager {
       throw new Error(`Rate limit exceeded. Maximum ${limit} requests per hour.`);
     }
 
-    dbOperations.updateRateLimit(ipAddress, hourKey);
+    await dbOperations.updateRateLimit(ipAddress, hourKey);
   }
 
   private isValidUrl(url: string): boolean {

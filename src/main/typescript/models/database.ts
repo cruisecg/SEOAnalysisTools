@@ -62,14 +62,22 @@ const defaultData: DatabaseSchema = {
 };
 
 // Initialize database
-const db = await JSONFilePreset(DB_PATH, defaultData);
+let db: any = null;
 
-export { db };
+async function initDB() {
+  if (!db) {
+    db = await JSONFilePreset(DB_PATH, defaultData);
+  }
+  return db;
+}
+
+export { initDB };
 
 // Database operations
 export const dbOperations = {
-  insertTask: (id: string, status: string, requested_url: string, ip_address: string, user_agent: string) => {
-    db.data.tasks.push({
+  insertTask: async (id: string, status: string, requested_url: string, ip_address: string, user_agent: string) => {
+    const database = await initDB();
+    database.data.tasks.push({
       id,
       status: status as any,
       requested_url,
@@ -77,10 +85,10 @@ export const dbOperations = {
       user_agent,
       created_at: new Date().toISOString()
     });
-    db.write();
+    database.write();
   },
 
-  updateTaskStatus: (
+  updateTaskStatus: async (
     status: string,
     final_url: string | null,
     overall_score: number | null,
@@ -89,7 +97,8 @@ export const dbOperations = {
     error_message: string | null,
     id: string
   ) => {
-    const task = db.data.tasks.find(t => t.id === id);
+    const database = await initDB();
+    const task = database.data.tasks.find(t => t.id === id);
     if (task) {
       task.status = status as any;
       if (final_url) task.final_url = final_url;
@@ -98,94 +107,102 @@ export const dbOperations = {
       if (analysis_data) task.analysis_data = analysis_data;
       if (error_message) task.error_message = error_message;
       task.completed_at = new Date().toISOString();
-      db.write();
+      database.write();
     }
   },
 
-  getTask: (id: string) => {
-    return db.data.tasks.find(t => t.id === id) || null;
+  getTask: async (id: string) => {
+    const database = await initDB();
+    return database.data.tasks.find(t => t.id === id) || null;
   },
 
-  getRateLimit: (ip_address: string, hour_key: string) => {
-    return db.data.rate_limits.find(r => r.ip_address === ip_address && r.hour_key === hour_key) || null;
+  getRateLimit: async (ip_address: string, hour_key: string) => {
+    const database = await initDB();
+    return database.data.rate_limits.find(r => r.ip_address === ip_address && r.hour_key === hour_key) || null;
   },
 
-  updateRateLimit: (ip_address: string, hour_key: string) => {
-    const existing = db.data.rate_limits.find(r => r.ip_address === ip_address && r.hour_key === hour_key);
+  updateRateLimit: async (ip_address: string, hour_key: string) => {
+    const database = await initDB();
+    const existing = database.data.rate_limits.find(r => r.ip_address === ip_address && r.hour_key === hour_key);
     if (existing) {
       existing.request_count++;
     } else {
-      db.data.rate_limits.push({
+      database.data.rate_limits.push({
         ip_address,
         hour_key,
         request_count: 1,
         created_at: new Date().toISOString()
       });
     }
-    db.write();
+    database.write();
   },
 
-  getCachedAnalysis: (url_hash: string) => {
+  getCachedAnalysis: async (url_hash: string) => {
+    const database = await initDB();
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-    const cache = db.data.analysis_cache.find(c => 
+    const cache = database.data.analysis_cache.find(c => 
       c.url_hash === url_hash && c.cached_at > oneHourAgo
     );
     
     if (cache) {
-      const task = db.data.tasks.find(t => t.id === cache.task_id && t.status === 'done');
+      const task = database.data.tasks.find(t => t.id === cache.task_id && t.status === 'done');
       return task ? { task_id: task.id } : null;
     }
     return null;
   },
 
-  insertCache: (url_hash: string, url: string, task_id: string) => {
+  insertCache: async (url_hash: string, url: string, task_id: string) => {
+    const database = await initDB();
     // Remove existing cache for this URL
-    db.data.analysis_cache = db.data.analysis_cache.filter(c => c.url_hash !== url_hash);
+    database.data.analysis_cache = database.data.analysis_cache.filter(c => c.url_hash !== url_hash);
     
-    db.data.analysis_cache.push({
+    database.data.analysis_cache.push({
       url_hash,
       url,
       task_id,
       cached_at: new Date().toISOString()
     });
-    db.write();
+    database.write();
   },
 
-  getSetting: (key: string) => {
-    return db.data.settings.find(s => s.key === key) || null;
+  getSetting: async (key: string) => {
+    const database = await initDB();
+    return database.data.settings.find(s => s.key === key) || null;
   },
 
-  updateSetting: (key: string, value: string) => {
-    const setting = db.data.settings.find(s => s.key === key);
+  updateSetting: async (key: string, value: string) => {
+    const database = await initDB();
+    const setting = database.data.settings.find(s => s.key === key);
     if (setting) {
       setting.value = value;
       setting.updated_at = new Date().toISOString();
     } else {
-      db.data.settings.push({
+      database.data.settings.push({
         key,
         value,
         updated_at: new Date().toISOString()
       });
     }
-    db.write();
+    database.write();
   }
 };
 
 // Cleanup old data periodically
-export const cleanup = () => {
+export const cleanup = async () => {
+  const database = await initDB();
   const now = new Date();
   const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString();
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
   // Remove old rate limits
-  db.data.rate_limits = db.data.rate_limits.filter(r => r.created_at > twoHoursAgo);
+  database.data.rate_limits = database.data.rate_limits.filter(r => r.created_at > twoHoursAgo);
   
   // Remove old failed tasks
-  db.data.tasks = db.data.tasks.filter(t => !(t.status === 'failed' && t.created_at < oneDayAgo));
+  database.data.tasks = database.data.tasks.filter(t => !(t.status === 'failed' && t.created_at < oneDayAgo));
   
   // Remove old cache entries
-  db.data.analysis_cache = db.data.analysis_cache.filter(c => c.cached_at > sevenDaysAgo);
+  database.data.analysis_cache = database.data.analysis_cache.filter(c => c.cached_at > sevenDaysAgo);
   
-  db.write();
+  database.write();
 };

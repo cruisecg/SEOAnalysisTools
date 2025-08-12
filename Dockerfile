@@ -23,15 +23,24 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Create data directory for SQLite
+# Create data directory
 RUN mkdir -p /app/data
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs && \
-    chown -R nextjs:nodejs /app
+    adduser --system --uid 1001 nextjs
 
+# Create playwright cache directory for nextjs user and set ownership
+RUN mkdir -p /home/nextjs/.cache/ms-playwright
+RUN cp -r /root/.cache/ms-playwright/* /home/nextjs/.cache/ms-playwright/ || true
+RUN chown -R nextjs:nodejs /app
+RUN chown -R nextjs:nodejs /home/nextjs/.cache
+
+# Switch to nextjs user
 USER nextjs
+
+# Set Playwright cache path for nextjs user
+ENV PLAYWRIGHT_BROWSERS_PATH=/home/nextjs/.cache/ms-playwright
 
 EXPOSE 3000
 
