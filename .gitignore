@@ -1,11 +1,16 @@
+# Dependencies
+node_modules/
+
+# Production builds
+.next/
+dist/
+build/
+
 # TypeScript
 *.js
 *.js.map
 *.d.ts
 !*.d.ts
-node_modules/
-dist/
-build/
 
 # Python (for AI/ML components)
 __pycache__/
