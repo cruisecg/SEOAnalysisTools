@@ -48,8 +48,6 @@ logs/
 
 # Output files (use output/ directory instead)
 *.csv
-*.json
-!package.json
 *.xlsx
 output/
 
