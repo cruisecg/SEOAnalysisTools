@@ -1,10 +1,9 @@
-FROM node:18-alpine
+FROM node:20-slim
 
-# Install system dependencies
-RUN apk add --no-cache \
-    libc6-compat \
+# Install system dependencies for Playwright
+RUN apt-get update && apt-get install -y \
     curl \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
