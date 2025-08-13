@@ -7,15 +7,6 @@ dist/
 build/
 
 # TypeScript
-*.js
-*.js.map
-*.d.ts
-!*.d.ts
-
-# Keep essential configuration files
-!tailwind.config.js
-!postcss.config.js
-!next.config.js
 
 # Python (for AI/ML components)
 __pycache__/
