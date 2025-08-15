@@ -177,7 +177,7 @@ function generateHTMLReport(task: any): string {
 
         <!-- Footer -->
         <div class="text-center text-sm text-gray-500 mt-8">
-            <p>報告由 OneStep SEO Inspector 生成</p>
+            <p>報告由 空間便利店 SEO Inspector 生成</p>
             <p>分析時間: ${task.completedAt ? new Date(task.completedAt).toLocaleString('zh-TW') : '處理中'}</p>
         </div>
     </div>

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# OneStep SEO Inspector - Startup Script
+# 空間便利店 SEO Inspector - Startup Script
 
-echo "🚀 Starting OneStep SEO Inspector..."
+echo "🚀 Starting 空間便利店 SEO Inspector..."
 
 # Check if Node.js is installed
 if ! command -v node &> /dev/null; then

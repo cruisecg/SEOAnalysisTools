@@ -40,7 +40,7 @@ export class SEOAnalyzer {
         route.continue({
           headers: {
             ...route.request().headers(),
-            'User-Agent': 'OneStep SEO Inspector Bot 1.0 (+https://seo-inspector.com/bot)'
+            'User-Agent': '空間便利店 SEO Inspector Bot 1.0 (+https://seo-inspector.com/bot)'
           }
         });
       });

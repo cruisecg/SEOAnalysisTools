@@ -16,7 +16,7 @@ services:
       - COVERAGE_PCT=80
       - RATE_LIMIT_ANONYMOUS=5
       - RATE_LIMIT_AUTHENTICATED=20
-      - NEXT_PUBLIC_APP_NAME=OneStep SEO Inspector
+      - NEXT_PUBLIC_APP_NAME=空間便利店 SEO Inspector
       - NEXT_PUBLIC_APP_URL=http://localhost:3000
     volumes:
       - ./data:/app/data

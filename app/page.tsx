@@ -54,11 +54,11 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="text-center mb-12">
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-          快速分析網站 SEO 表現
+          專門針對場地租借網站 SEO 快速健檢
         </h2>
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          輸入任意網址，我們將為您全面分析網站的 SEO 健康狀況，
-          提供詳細的評分報告和具體的修正建議。
+          輸入您的場地租借網站網址，立即獲取專屬的 SEO 健康檢測報告。
+          我們將深入分析網站在搜尋引擎上的可見度、關鍵字佈局、內容優化與技術結構，並提供清晰的評分與實用修正建議，幫助您的場地更容易被找到、吸引更多活動主辦方與租客上門。
         </p>
       </div>
 
