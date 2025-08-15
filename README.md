@@ -213,7 +213,61 @@ npm start
 
 ## 🔐 SSL/HTTPS 設定
 
-### 使用 Let's Encrypt (推薦)
+### 🚀 自動化 SSL 設定 (推薦)
+
+本項目提供完全自動化的 SSL 證書管理系統，包含自動申請、更新和監控。
+
+#### 1. **一鍵初始化 SSL**
+```bash
+# 編輯腳本中的域名和郵箱
+nano scripts/ssl-init.sh  # 修改 DOMAIN 和 EMAIL
+
+# 執行自動 SSL 設定
+./scripts/ssl-init.sh
+```
+
+#### 2. **設定自動更新**
+```bash
+# 安裝自動更新 cron 任務
+sudo ./scripts/setup-ssl-cron.sh
+```
+
+#### 3. **驗證自動化系統**
+```bash
+# 檢查 SSL 證書狀態
+openssl x509 -enddate -noout -in ssl/cert.pem
+
+# 查看更新日誌
+tail -f logs/ssl-renewal.log
+
+# 手動測試更新腳本
+sudo ./scripts/ssl-renew.sh
+```
+
+### 🔄 自動更新特性
+
+- ✅ **智能檢測**: 證書到期前 30 天自動更新
+- ✅ **零停機**: 自動停止/啟動容器進行更新
+- ✅ **日誌記錄**: 完整的更新日誌和錯誤追蹤
+- ✅ **健康監控**: 24 小時證書狀態監控
+- ✅ **郵件通知**: 更新成功/失敗自動通知 (可選)
+- ✅ **自動重試**: 失敗時自動重試機制
+
+### 📊 SSL 監控面板
+
+使用 Docker Compose 啟動 SSL 監控服務：
+
+```bash
+# 啟動 SSL 監控服務
+docker compose -f docker-compose.ssl.yml --profile ssl up -d
+
+# 查看證書監控日誌
+tail -f logs/ssl-monitor.log
+```
+
+### 🛠️ 手動 SSL 設定 (進階用戶)
+
+如果需要手動設定，請按照以下步驟：
 
 1. **安裝 Certbot**
 ```bash
@@ -227,8 +281,8 @@ brew install certbot
 
 2. **獲取 SSL 證書**
 ```bash
-# 替換 your-domain.com 為你的域名
-sudo certbot certonly --standalone -d your-domain.com
+# 替換為你的域名
+sudo certbot certonly --standalone -d seo.onestep.place
 ```
 
 3. **複製證書到專案目錄**
@@ -334,6 +388,53 @@ openssl s_client -connect localhost:443 -servername localhost
 curl -I http://localhost
 # 應該返回 301 重定向到 https://
 ```
+
+### 📊 SSL 狀態面板
+
+使用內建的 SSL 狀態檢查工具：
+
+```bash
+# 查看完整 SSL 狀態報告
+./scripts/ssl-status.sh
+```
+
+### 🚀 快速 SSL 設定指南
+
+**生產環境完整設定 (3 步驟)**:
+
+```bash
+# 1. 編輯域名和郵箱
+nano scripts/ssl-init.sh
+
+# 2. 一鍵初始化 SSL
+./scripts/ssl-init.sh
+
+# 3. 設定自動更新
+sudo ./scripts/setup-ssl-cron.sh
+```
+
+**開發環境快速設定**:
+
+```bash
+# 生成自簽名證書
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout ssl/key.pem -out ssl/cert.pem \
+  -subj "/C=TW/ST=Taiwan/L=Taipei/O=SEO Inspector/CN=localhost"
+
+# 重啟服務
+docker compose --profile production restart
+```
+
+### 🔧 SSL 管理命令總覽
+
+| 命令 | 說明 |
+|------|------|
+| `./scripts/ssl-status.sh` | 查看 SSL 證書狀態 |
+| `./scripts/ssl-init.sh` | 初始化 SSL 證書 |
+| `sudo ./scripts/ssl-renew.sh` | 手動更新證書 |
+| `sudo ./scripts/setup-ssl-cron.sh` | 設定自動更新 |
+| `tail -f logs/ssl-renewal.log` | 查看更新日誌 |
+| `docker compose -f docker-compose.ssl.yml --profile ssl up -d` | 啟動 SSL 監控 |
 
 ## 🔒 安全性考量
 

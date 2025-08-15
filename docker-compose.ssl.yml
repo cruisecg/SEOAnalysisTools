@@ -1,0 +1,65 @@
+# SSL Management Docker Compose
+# This file provides SSL certificate management services
+
+name: seo-inspector-ssl
+
+services:
+  # Certbot service for SSL certificate management
+  certbot:
+    image: certbot/certbot:latest
+    container_name: seo-inspector-certbot
+    volumes:
+      - ./ssl:/etc/letsencrypt/live/seo.onestep.place:rw
+      - ./logs:/var/log/letsencrypt:rw
+      - certbot-var:/var/lib/letsencrypt
+      - certbot-etc:/etc/letsencrypt
+    environment:
+      - CERTBOT_EMAIL=admin@onestep.place  # Change this
+    command: >
+      sh -c "
+        trap exit TERM;
+        while :; do
+          certbot renew --quiet --no-self-upgrade --non-interactive;
+          sleep 12h & wait $${!};
+        done
+      "
+    restart: unless-stopped
+    profiles:
+      - ssl
+
+  # SSL certificate monitoring
+  ssl-monitor:
+    image: alpine:latest
+    container_name: seo-inspector-ssl-monitor
+    volumes:
+      - ./ssl:/ssl:ro
+      - ./logs:/logs:rw
+    environment:
+      - DOMAIN=seo.onestep.place
+      - CHECK_INTERVAL=86400  # 24 hours
+    command: >
+      sh -c "
+        apk add --no-cache openssl curl;
+        while true; do
+          if [ -f /ssl/cert.pem ]; then
+            EXPIRY=$$(openssl x509 -enddate -noout -in /ssl/cert.pem | cut -d= -f2);
+            EXPIRY_TIMESTAMP=$$(date -d \"$$EXPIRY\" +%s);
+            CURRENT_TIMESTAMP=$$(date +%s);
+            DAYS_UNTIL_EXPIRY=$$((($${EXPIRY_TIMESTAMP} - $${CURRENT_TIMESTAMP}) / 86400));
+            echo \"[$(date)] SSL certificate expires in $$DAYS_UNTIL_EXPIRY days\" >> /logs/ssl-monitor.log;
+            if [ $$DAYS_UNTIL_EXPIRY -lt 7 ]; then
+              echo \"[$(date)] WARNING: SSL certificate expires in $$DAYS_UNTIL_EXPIRY days!\" >> /logs/ssl-monitor.log;
+            fi;
+          else
+            echo \"[$(date)] No SSL certificate found\" >> /logs/ssl-monitor.log;
+          fi;
+          sleep $$CHECK_INTERVAL;
+        done
+      "
+    restart: unless-stopped
+    profiles:
+      - ssl
+
+volumes:
+  certbot-var:
+  certbot-etc:

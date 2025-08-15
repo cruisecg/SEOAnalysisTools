@@ -17,7 +17,7 @@ services:
       - RATE_LIMIT_ANONYMOUS=5
       - RATE_LIMIT_AUTHENTICATED=20
       - NEXT_PUBLIC_APP_NAME=空間便利店 SEO Inspector
-      - NEXT_PUBLIC_APP_URL=http://localhost
+      - NEXT_PUBLIC_APP_URL=https://seo.onestep.place
     volumes:
       - ./data:/app/data
     restart: unless-stopped
@@ -40,5 +40,11 @@ services:
     depends_on:
       - seoinspector
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     profiles:
       - production
