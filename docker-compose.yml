@@ -4,8 +4,8 @@ services:
   seoinspector:
     build: .
     image: onestepseoinspector
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"  # Removed: nginx will proxy to this container
     environment:
       - NODE_ENV=production
       - DATABASE_PATH=/app/data/seo_analysis.db
@@ -17,7 +17,7 @@ services:
       - RATE_LIMIT_ANONYMOUS=5
       - RATE_LIMIT_AUTHENTICATED=20
       - NEXT_PUBLIC_APP_NAME=空間便利店 SEO Inspector
-      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - NEXT_PUBLIC_APP_URL=http://localhost
     volumes:
       - ./data:/app/data
     restart: unless-stopped

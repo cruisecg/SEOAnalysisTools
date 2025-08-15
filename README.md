@@ -191,8 +191,12 @@ docker run -p 3000:3000 -v ./data:/app/data seo-inspector
 
 3. **使用Docker Compose (含Nginx)**
 ```bash
-docker-compose --profile production up -d
+docker compose --profile production up -d
 ```
+
+應用將在以下端口可用：
+- **HTTP**: http://localhost (端口 80)
+- **HTTPS**: https://localhost (端口 443，需要SSL證書)
 
 ### 手動部署
 
@@ -205,6 +209,130 @@ npm run build
 3. **啟動應用**
 ```bash
 npm start
+```
+
+## 🔐 SSL/HTTPS 設定
+
+### 使用 Let's Encrypt (推薦)
+
+1. **安裝 Certbot**
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install certbot
+
+# macOS
+brew install certbot
+```
+
+2. **獲取 SSL 證書**
+```bash
+# 替換 your-domain.com 為你的域名
+sudo certbot certonly --standalone -d your-domain.com
+```
+
+3. **複製證書到專案目錄**
+```bash
+# 創建 ssl 目錄
+mkdir -p ssl
+
+# 複製證書文件 (需要 sudo 權限)
+sudo cp /etc/letsencrypt/live/your-domain.com/fullchain.pem ssl/cert.pem
+sudo cp /etc/letsencrypt/live/your-domain.com/privkey.pem ssl/key.pem
+
+# 設定權限
+sudo chown $USER:$USER ssl/*.pem
+chmod 600 ssl/*.pem
+```
+
+4. **啟用 HTTPS 配置**
+
+編輯 `nginx.conf`，取消註解 HTTPS 部分：
+
+```nginx
+# 取消註解以下配置並修改域名
+server {
+    listen 443 ssl http2;
+    server_name your-domain.com;
+    
+    ssl_certificate /etc/nginx/ssl/cert.pem;
+    ssl_certificate_key /etc/nginx/ssl/key.pem;
+    
+    # SSL 安全配置
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    
+    # 複製 HTTP 服務器的所有 location 區塊
+    # ... (與 HTTP 配置相同)
+}
+
+# HTTP 自動重定向到 HTTPS
+server {
+    listen 80;
+    server_name your-domain.com;
+    return 301 https://$server_name$request_uri;
+}
+```
+
+5. **重新啟動服務**
+```bash
+docker compose --profile production down
+docker compose --profile production up -d
+```
+
+### 使用自簽名證書 (開發環境)
+
+1. **生成自簽名證書**
+```bash
+# 創建 ssl 目錄
+mkdir -p ssl
+
+# 生成私鑰和證書
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout ssl/key.pem \
+  -out ssl/cert.pem \
+  -subj "/C=TW/ST=Taiwan/L=Taipei/O=SEO Inspector/CN=localhost"
+```
+
+2. **啟用 HTTPS 配置** (同上步驟 4)
+
+3. **訪問應用**
+- 瀏覽器會顯示安全警告，點擊「繼續前往」即可
+- 訪問：https://localhost
+
+### 證書自動更新
+
+設定 cron 任務自動更新 Let's Encrypt 證書：
+
+```bash
+# 編輯 crontab
+sudo crontab -e
+
+# 添加以下行（每月1號凌晨2點檢查更新）
+0 2 1 * * certbot renew --quiet && docker compose --profile production restart nginx
+```
+
+### SSL 配置驗證
+
+1. **檢查證書有效性**
+```bash
+openssl x509 -in ssl/cert.pem -text -noout
+```
+
+2. **測試 SSL 配置**
+```bash
+# 使用 SSL Labs 測試 (線上工具)
+# https://www.ssllabs.com/ssltest/
+
+# 或使用命令行測試
+openssl s_client -connect localhost:443 -servername localhost
+```
+
+3. **檢查 HTTPS 重定向**
+```bash
+curl -I http://localhost
+# 應該返回 301 重定向到 https://
 ```
 
 ## 🔒 安全性考量
