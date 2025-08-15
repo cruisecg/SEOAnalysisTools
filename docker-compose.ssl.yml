@@ -4,23 +4,30 @@
 name: seo-inspector-ssl
 
 services:
-  # Certbot service for SSL certificate management
+  # Certbot service for SSL certificate renewal (sleeps until certificates exist)
   certbot:
-    image: certbot/certbot:latest
+    image: alpine:latest
     container_name: seo-inspector-certbot
     volumes:
-      - ./ssl:/etc/letsencrypt/live/seo.onestep.place:rw
-      - ./logs:/var/log/letsencrypt:rw
+      - ./logs:/logs:rw
       - certbot-var:/var/lib/letsencrypt
       - certbot-etc:/etc/letsencrypt
     environment:
       - CERTBOT_EMAIL=admin@onestep.place  # Change this
     command: >
       sh -c "
-        trap exit TERM;
-        while :; do
-          certbot renew --quiet --no-self-upgrade --non-interactive;
-          sleep 12h & wait $${!};
+        apk add --no-cache certbot;
+        echo '[$(date)] Certbot renewal service starting...';
+        while true; do
+          echo '[$(date)] Checking for certificates to renew...';
+          if [ -d '/etc/letsencrypt/live' ] && [ \"\$$(ls -A /etc/letsencrypt/live 2>/dev/null)\" ]; then
+            echo '[$(date)] Found certificates, attempting renewal...' >> /logs/certbot.log;
+            certbot renew --quiet --no-self-upgrade --non-interactive >> /logs/certbot.log 2>&1;
+          else
+            echo '[$(date)] No certificates found, skipping renewal check...' >> /logs/certbot.log;
+          fi;
+          echo '[$(date)] Sleeping for 12 hours...' >> /logs/certbot.log;
+          sleep 43200;
         done
       "
     restart: unless-stopped
@@ -39,16 +46,25 @@ services:
       - CHECK_INTERVAL=86400  # 24 hours
     command: >
       sh -c "
-        apk add --no-cache openssl curl;
+        apk add --no-cache openssl curl coreutils;
         while true; do
           if [ -f /ssl/cert.pem ]; then
-            EXPIRY=$$(openssl x509 -enddate -noout -in /ssl/cert.pem | cut -d= -f2);
-            EXPIRY_TIMESTAMP=$$(date -d \"$$EXPIRY\" +%s);
-            CURRENT_TIMESTAMP=$$(date +%s);
-            DAYS_UNTIL_EXPIRY=$$((($${EXPIRY_TIMESTAMP} - $${CURRENT_TIMESTAMP}) / 86400));
-            echo \"[$(date)] SSL certificate expires in $$DAYS_UNTIL_EXPIRY days\" >> /logs/ssl-monitor.log;
-            if [ $$DAYS_UNTIL_EXPIRY -lt 7 ]; then
-              echo \"[$(date)] WARNING: SSL certificate expires in $$DAYS_UNTIL_EXPIRY days!\" >> /logs/ssl-monitor.log;
+            EXPIRY_RAW=$$(openssl x509 -enddate -noout -in /ssl/cert.pem | cut -d= -f2);
+            CERT_SUBJECT=$$(openssl x509 -subject -noout -in /ssl/cert.pem | sed 's/subject=//' | sed 's/^[[:space:]]*//' | cut -c1-50);
+            
+            # Check if certificate is valid (not expired)
+            if openssl x509 -checkend 0 -noout -in /ssl/cert.pem >/dev/null 2>&1; then
+              # Try to calculate days until expiry for informational purposes only
+              if openssl x509 -checkend 2592000 -noout -in /ssl/cert.pem >/dev/null 2>&1; then
+                echo \"[$(date)] SSL certificate is healthy: $$CERT_SUBJECT\" >> /logs/ssl-monitor.log;
+                echo \"[$(date)] Certificate expires: $$EXPIRY_RAW\" >> /logs/ssl-monitor.log;
+              else
+                echo \"[$(date)] WARNING: SSL certificate expires within 30 days: $$CERT_SUBJECT\" >> /logs/ssl-monitor.log;
+                echo \"[$(date)] Certificate expires: $$EXPIRY_RAW\" >> /logs/ssl-monitor.log;
+              fi;
+            else
+              echo \"[$(date)] CRITICAL: SSL certificate has expired: $$CERT_SUBJECT\" >> /logs/ssl-monitor.log;
+              echo \"[$(date)] Certificate expired: $$EXPIRY_RAW\" >> /logs/ssl-monitor.log;
             fi;
           else
             echo \"[$(date)] No SSL certificate found\" >> /logs/ssl-monitor.log;
